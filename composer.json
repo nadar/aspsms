@@ -1,0 +1,12 @@
+{
+	"name" : "nadar/aspsms",
+	"description" : "php class for sending sms over aspsms"
+	"require": {
+		"phpunit/phpunit" : "4.0.*"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Aspsms\\" : "src/"
+		}
+	}
+}
