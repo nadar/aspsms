@@ -318,7 +318,12 @@ class Aspsms
             $result = explode(";", $trackResponse);
             // error while exploding the response
             if (count($result) == 0 || count($result) == 1 || !is_array($result)) {
-                throw new Exception("Something went wrong while working with the deliveryStatus response. Response: \"{$response}\"");
+            	$errorExplode = explode(":", $response);
+            	if (count($errorExplode) !== 2) {
+                	throw new Exception("Something went wrong while working with the deliveryStatus response. Response: \"{$response}\"");
+            	} else {
+            		throw new Exception($this->sendStatusCodes[$errorExplode[1]]);
+            	}
             }
             // set default value for reasoncode
             if ($result[1] == 0) {
@@ -342,7 +347,7 @@ class Aspsms
         }
         // see if we have an error with the response
         if ($i === 0) {
-            throw new Exception("Wrong tracking number provided. Verify your input.");
+            throw new Exception("The provided Tracking Number does not exists.");
         }
         // if there is only 1 result, we have to return only the single assoc array
         if ($i === 1) {
