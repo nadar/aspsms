@@ -1,8 +1,5 @@
 <?php
-/**
- * @author nadar <basil.suter@indielab.ch>
- * @see https://github.com/nadar/aspsms-php-class
- * 
+/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,14 +17,10 @@ namespace Aspsms;
 
 use Aspsms\Request;
 use Aspsms\Exception;
-
-// remove those to use your autoloader
-require_once 'Request.php';
-require_once 'Exception.php';
  
 // see if the curl extension is loaded
 if (!function_exists('curl_init')) {
-    trigger_error('Aspsms needs the CURL PHP extension, curl_init() function not found!', E_USER_ERROR);
+    trigger_error('Aspsms requires the CURL PHP extension! curl_init() function not found!', E_USER_ERROR);
 }
 
 // trigger error for not compatible php version!
@@ -36,31 +29,20 @@ if (!version_compare(PHP_VERSION, '5.3.0', '>=')) {
 }
 
 /**
- * Version information:
- * 
- * 1.2:
- *  - added static method verifyMobileNumber(MOBILE_PHONE_NUMBER);
- *  - add php namespace
- *  - version check (php 5.3 or higher)
- *  - minor bug fixes for retrieving delivery informations
- * 
- * 1.1:
- *  - added version constant
- *  - added static public function to verify the tracking number validity
- */
-
-/**
  * The Aspsms class provides the basic function to easily send message, check delivery status or 
  * show the available amount of credits.
  * 
- * @example See in examples/Basic.php
+ * @example See in examples/basic_composer_setup.php
  * @package Aspsms
  * @author nadar <basil.suter@indielab.ch>
- * @see https://github.com/nadar/aspsms-php-class
+ * @see https://github.com/nadar/aspsms
  */
-class Aspsms
-{
-    const VERSION = 1.2;
+class Aspsms {
+	/**
+	 * Contains the Aspms Class Version
+	 * @var unknown_type
+	 */
+    const VERSION = 2.0;
     
     /**
      * Contains the services url [status 30.01.2013]
@@ -230,7 +212,7 @@ class Aspsms
      * 
      * @param string    $message            Contains the message text for the user. can only be 160 chars
      * @param array     $recipients         Array containing the recipients, where the key is the tracking number and the value
-     *                                      equats the mobile number. Mobile Number format must be without spaces or +(plus) signs.
+     *                                      equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
      * @param array     $options[optional]  Basic associativ array, available keys see $validOptions array. Commonly used to provide
      *                                      AffiliateId or Originator values.
      * @return boolean
