@@ -56,3 +56,5 @@ Example ASPSMS class usage
 
 		var_dump($status1, $status2, $status3);
 	?>
+
+[indielab.ch](www.indielab.ch)
