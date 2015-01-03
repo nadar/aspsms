@@ -1,14 +1,14 @@
 SMS wrapper class for ASPSMS.COM
 ================
 
-A very simple to use sms sending class for the aspsms.com gateway by indielab.ch. This is the _new Composer Version_ of this class.
+A very simple to use sms sending class for the aspsms.com gateway by indielab.ch. This is the _new Composer Version_ of the sms sending class.
 
 Installation instructions
 -------------------------
 
-1. added "nadar/aspsms" : "dev-master" to your composer.json file.
-2. Start the Aspsms class with your credentials.
-3. Happy sending
+1. Add "nadar/aspsms" : "dev-master" to your composer.json file.
+2. Start the Aspsms class with your credentials. (see examples/basic_composer_setup.php)
+3. Happy sending!
 
 Example composer.json
 ------------

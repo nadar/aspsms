@@ -29,7 +29,7 @@ use Aspsms\Exception;
  * $request->flush();
  * 
  * @package Aspsms
- * @author nadar <basil.suter@indielab.ch>
+ * @author nadar <n@adar.ch>
  * @see https://github.com/nadar/aspsms
  */
 class Request

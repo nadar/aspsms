@@ -34,7 +34,7 @@ if (!version_compare(PHP_VERSION, '5.3.0', '>=')) {
  * 
  * @example See in examples/basic_composer_setup.php
  * @package Aspsms
- * @author nadar <basil.suter@indielab.ch>
+ * @author nadar <n@adar.ch>
  * @see https://github.com/nadar/aspsms
  */
 class Aspsms {
@@ -53,7 +53,7 @@ class Aspsms {
     
     /**
      * Contains the userkey which is provided from the aspsms.com webpage under the menu 
-     * point "USERKEY". Lookes somehwat like that FAG9XPAUQLQ3
+     * point "USERKEY". Looks some what like this FAG9XPAUQLQ3
      * 
      * @var string
      */
