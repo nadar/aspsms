@@ -13,48 +13,48 @@ Installation instructions
 Example composer.json
 ------------
 
-	{
-		"require" : {
-			"nadar/aspsms": "dev-master"
-		}
-	}
-	
+    {
+        "require" : {
+            "nadar/aspsms": "dev-master"
+        }
+    }
+
 Example ASPSMS class usage
 -----------
 
-	<?php
-		require '../vendor/autoload.php';
-		
-		use Aspsms\Aspsms;
+    <?php
+        require '../vendor/autoload.php';
 
-		// create object class with originator option
-		$aspsms = new Aspsms('<YOUR_KEY>', '<YOUR_PASSWORD>', array(
-    		'Originator' => '<MY_SENDER_NAME>'
-		));
+        use Aspsms\Aspsms;
 
-		// set message and recipients with tracking theyr individual tracking numbers.
-		// attention: verify your tracking numbers first with $aspsms->verifyTrackingNumber(..);
-		$send = $aspsms->sendTextSms('<YOUR_SMS_MESSAGE>', array(
-    		'<TRACKING_NR1>' => '<MOBILE_PHONE_NR1>',
-			'<TRACKING_NR2>' => '<MOBILE_PHONE_NR2>',
-    		'<TRACKING_NR3>' => '<MOBILE_PHONE_NR3>'
-		));
+        // create object class with originator option
+        $aspsms = new Aspsms('<YOUR_KEY>', '<YOUR_PASSWORD>', array(
+            'Originator' => '<MY_SENDER_NAME>'
+        ));
 
-		// the message was rejected by aspsms or your authentification credentials where wrong.
-		if (!$send) {
-    		echo "[ASPSMS] Error while sending text message: " . $aspsms->getSendStatus();
-		}
+        // set message and recipients with tracking theyr individual tracking numbers.
+        // attention: verify your tracking numbers first with $aspsms->verifyTrackingNumber(..);
+        $send = $aspsms->sendTextSms('<YOUR_SMS_MESSAGE>', array(
+            '<TRACKING_NR1>' => '<MOBILE_PHONE_NR1>',
+            '<TRACKING_NR2>' => '<MOBILE_PHONE_NR2>',
+            '<TRACKING_NR3>' => '<MOBILE_PHONE_NR3>'
+        ));
 
-		// aspsms takes a little time to delivery your message. You can also send the message and
-		// store the tracking numbers in a database, so you could retrieve the delivery status later.
-		sleep(10);
+        // the message was rejected by aspsms or your authentification credentials where wrong.
+        if (!$send) {
+            echo "[ASPSMS] Error while sending text message: " . $aspsms->getSendStatus();
+        }
 
-		// get deliver status response
-		$status1 = $aspsms->deliveryStatus('<TRACKING_NR1>');
-		$status2 = $aspsms->deliveryStatus('<TRACKING_NR2>');
-		$status3 = $aspsms->deliveryStatus('<TRACKING_NR3>');
+        // aspsms takes a little time to delivery your message. You can also send the message and
+        // store the tracking numbers in a database, so you could retrieve the delivery status later.
+        sleep(10);
 
-		var_dump($status1, $status2, $status3);
-	?>
+        // get deliver status response
+        $status1 = $aspsms->deliveryStatus('<TRACKING_NR1>');
+        $status2 = $aspsms->deliveryStatus('<TRACKING_NR2>');
+        $status3 = $aspsms->deliveryStatus('<TRACKING_NR3>');
+
+        var_dump($status1, $status2, $status3);
+    ?>
 
 [indielab.ch](www.indielab.ch)
