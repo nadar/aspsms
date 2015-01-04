@@ -57,4 +57,9 @@ Example ASPSMS class usage
         var_dump($status1, $status2, $status3);
     ?>
 
-[indielab.ch](www.indielab.ch)
+How to use PHP Unit
+-------------------
+1. wget https://phar.phpunit.de/phpunit.phar
+2. chmod +x phpunit.phar 
+3. mv phpunit.phar /usr/local/bin/phpunit
+4. phpunit

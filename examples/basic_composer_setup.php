@@ -20,7 +20,7 @@ use Aspsms\Aspsms;
 
 // define your 
 define('USER_KEY', '<YOUR_KEY_FROM_ASPSMS.NET>');
-define('USER_PASS', '<OUR_PASS_FROM_ASPSMS.NET>');
+define('USER_PASS', '<YOUR_PASSWORD_FROM_ASPSMS.NET>');
 
 // set optional attributes
 $options = array(
