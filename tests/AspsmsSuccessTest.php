@@ -10,16 +10,16 @@ class AspsmsSuccessTest extends \PHPUnit_Framework_TestCase
      * @var Aspsms
      */
     public $aspsms = null;
-    
+
     public function setUp()
     {
         $this->aspsms = new Aspsms(USER_KEY, USER_PASS, array("Originator" => "indielab.ch"));
     }
-    
+
     public function testSendTextSms()
     {
         $sendSms = $this->aspsms->sendTextSms("example", array(
-            SMS_TRACKING => SMS_NUMBER
+            SMS_TRACKING => SMS_NUMBER,
         ));
 
         $this->assertEquals(true, $sendSms);

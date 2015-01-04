@@ -1,17 +1,5 @@
 <?php
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 namespace Aspsms;
 
 /**
@@ -29,14 +17,14 @@ class Aspsms
      * Contains the Aspms Class Version
      */
     const VERSION = 2.0;
-    
+
     /**
      * Contains the services url [status 30.01.2013]
      *
      * @var string
      */
     public $server = "https://webservice.aspsms.com/aspsmsx2.asmx/";
-    
+
     /**
      * Contains the userkey which is provided from the aspsms.com webpage under the menu
      * point "USERKEY". Looks some what like this FAG9XPAUQLQ3
@@ -44,14 +32,14 @@ class Aspsms
      * @var string
      */
     private $userkey = null;
-    
+
     /**
      * The password you use to login on the webpage (aspsms.com), in its blank not encrypted form...
      *
      * @var string
      */
     private $password = null;
-    
+
     /**
      * All sms status service reason codes which appears to be used when u have a not usual
      * deliver status. There is an optional newsletter from 2009 with some more informations [see]
@@ -100,9 +88,9 @@ class Aspsms
         "205" => "Invalid validity period format",
         "206" => "Invalid destination address",
         "207" => "Duplicate message submit",
-        "208" => "Invalid message type indicator"
+        "208" => "Invalid message type indicator",
     );
-    
+
     /**
      * Contains all delivey sms notification status
      *
@@ -112,9 +100,9 @@ class Aspsms
        -1 => "Not yet submitted or rejected",
         0 => "Delivered",
         1 => "Buffered",
-        2 => "Not Delivered"
+        2 => "Not Delivered",
     );
-    
+
     /**
      * Response status codes when you send an sms
      *
@@ -123,16 +111,16 @@ class Aspsms
     private $sendStatusCodes = array(
         1 => "Ok",
         3 => "Authorization failed (wrong userkey and/or password).",
-        5 => "Not enough Credits available."
+        5 => "Not enough Credits available.",
     );
-    
+
     /**
      * Contains the sms status response value from $sendStatusCodes
      *
      * @var string
      */
     private $sendStatus = null;
-    
+
     /**
      * Contains all valid option parameters which can be delivere trough option
      * arguments in functions.
@@ -150,22 +138,22 @@ class Aspsms
         "AffiliateId",
         "MessageText",
         "Recipients",
-        "TransactionReferenceNumbers"
+        "TransactionReferenceNumbers",
     );
-    
+
     /**
      * All active options with their values, will be flushed after each request
      *
      * @var string
      */
     private $currentOptions = array();
-    
+
     /**
      * Class construct contains basic informations which are needed for each request type.
      *
-     * @param string $userkey            The userkey provided from aspsms.net
-     * @param string $password           The blank passwort from your aspsms.net login
-     * @param array  $options[optional]  Basic associativ array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator.
+     * @param string $userkey           The userkey provided from aspsms.net
+     * @param string $password          The blank passwort from your aspsms.net login
+     * @param array  $options[optional] Basic associativ array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator.
      */
     public function __construct($userkey, $password, array $options = array())
     {
@@ -176,7 +164,7 @@ class Aspsms
         // set optional options if any provided
         $this->setOptions($options);
     }
-    
+
     /**
      * Main function sendTextSms, used to send a SMS message to multiple recipients.
      *
@@ -195,10 +183,10 @@ class Aspsms
      *     "AffiliateId" => "1234567"
      * ));
      *
-     * @param string    $message            Contains the message text for the user. can only be 160 chars
-     * @param array     $recipients         Array containing the recipients, where the key is the tracking number and the value
+     * @param  string    $message           Contains the message text for the user. can only be 160 chars
+     * @param  array     $recipients        Array containing the recipients, where the key is the tracking number and the value
      *                                      equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
-     * @param array     $options[optional]  Basic associativ array, available keys see $validOptions array. Commonly used to provide
+     * @param  array     $options[optional] Basic associativ array, available keys see $validOptions array. Commonly used to provide
      *                                      AffiliateId or Originator values.
      * @return boolean
      * @throws Exception
@@ -229,7 +217,7 @@ class Aspsms
             "TimeZone",
             "URLBufferedMessageNotification",
             "URLDeliveryNotification",
-            "URLNonDeliveryNotification"
+            "URLNonDeliveryNotification",
         )));
         // explode the response
         $result = explode(":", $response);
@@ -250,7 +238,7 @@ class Aspsms
         // response true
         return true;
     }
-    
+
     /**
      * Getting all informations from sms delivery system for the provided tracking number (which you put besides the recipients)
      *
@@ -260,8 +248,8 @@ class Aspsms
      * => success-delivery: 1359553540;0;30012013144546;30012013144555;000;;
      * => failure-delivery: 1359555046;2;30012013151053;30012013151053;206;;
      *
-     * @param mixed   $tracknr    The tracking number which is provided when setting the recipients. Can be an array of tracking numbers.
-     * @return array (If an array with multiple tracking numbers is provided the response as an assoc array for each tracking number.)
+     * @param  mixed     $tracknr The tracking number which is provided when setting the recipients. Can be an array of tracking numbers.
+     * @return array     (If an array with multiple tracking numbers is provided the response as an assoc array for each tracking number.)
      * @throws Exception
      */
     public function deliveryStatus($tracknr)
@@ -270,7 +258,7 @@ class Aspsms
         $this->setOption("TransactionReferenceNumbers", implode(";", (array) $tracknr));
         // start request
         $response = $this->request("InquireDeliveryNotifications", $this->getOptions(array(
-            "TransactionReferenceNumbers"
+            "TransactionReferenceNumbers",
         )));
         // response array
         $responseArray = array();
@@ -309,7 +297,7 @@ class Aspsms
                 "deliveryStatusBool" => ($result[1] == 0) ? true : false,
                 "submissionDate" => $this->dateSplitter($result[2]),
                 "notificationDate" => $this->dateSplitter($result[3]),
-                "reasoncode" => $reasoncode
+                "reasoncode" => $reasoncode,
             );
             // add i+1
             $i++;
@@ -328,7 +316,7 @@ class Aspsms
 
         return $responseArray;
     }
-    
+
     /**
      * Get the amount of left credits connected to your account.
      *
@@ -346,9 +334,9 @@ class Aspsms
             throw new Exception("Something went wrong while working with the credits response. Response: \"{$response}\"");
         }
         // return the amount
-        return (int)$result[1];
+        return (int) $result[1];
     }
-    
+
     /**
      * Provides the possibility to read the sendstatus as a readable-response-string (from $sendStatusCodes array)
      *
@@ -358,11 +346,11 @@ class Aspsms
     {
         return $this->sendStatus;
     }
-    
+
     /**
      * Delete all not allowed signes from a tracking number.
      *
-     * @param string    $trackingNumber The tracking number to verify
+     * @param  string $trackingNumber The tracking number to verify
      * @return string
      */
     public static function verifyTrackingNumber($trackingNumber)
@@ -370,11 +358,11 @@ class Aspsms
         // only a-z A-Z and 0-9 are allowed signs for tracking numbers, preg replace and return.
         return preg_replace("/[^a-zA-Z0-9]/", "", $trackingNumber);
     }
-    
+
     /**
      * Delete not allowed signes from the mobile phone number.
      *
-     * @param string	$mobileNumber The mobile number to verify
+     * @param  string $mobileNumber The mobile number to verify
      * @return string
      */
     public static function verifyMobileNumber($mobileNumber)
@@ -382,19 +370,19 @@ class Aspsms
         // only numberic values
         return preg_replace("/[^0-9]/", "", $mobileNumber);
     }
-    
+
     /**
      * Execute the CURL HTTP POST request to aspsms server. Below a description of the different actions and their values/options:
      *
      * @see https://webservice.aspsms.com/aspsmsx2.asmx
-     * @param string    $action     Contains the aspsms service defined action name like: CheckCredits, InquireDeliveryNotifications, SendTextSMS
-     * @param array     $values     The values which needs to be passed to this action
+     * @param  string       $action Contains the aspsms service defined action name like: CheckCredits, InquireDeliveryNotifications, SendTextSMS
+     * @param  array        $values The values which needs to be passed to this action
      * @return string/mixed
      */
     private function request($action, array $values = array())
     {
         // build new AspsmsRequest-Object
-        $request = new Request($this->server . $action, $this->prepareValues($values));
+        $request = new Request($this->server.$action, $this->prepareValues($values));
         // transfer the request
         $response = $request->transfer();
         // flush request class
@@ -404,11 +392,11 @@ class Aspsms
         // return request response to its executed method
         return $response;
     }
-    
+
     /**
      * We put all options together, and also add the always the basics like userkey and password.
      *
-     * @param array     $values     The key is the "post-field" and the value the "post-field-associated-value"
+     * @param  array $values The key is the "post-field" and the value the "post-field-associated-value"
      * @return array
      */
     private function prepareValues($values)
@@ -416,7 +404,7 @@ class Aspsms
         // set default transfer values
         $transferValues = array(
             'UserKey' => $this->userkey,
-            'Password' => $this->password
+            'Password' => $this->password,
         );
         /// get the request values urlencode und utf8encode first.
         foreach ($values as $key => $value) {
@@ -425,7 +413,7 @@ class Aspsms
         // return changed transfer values
         return $transferValues;
     }
-    
+
     /**
      * After a request like smssend, deliverystatus or creditscheck we set back the default
      * options value for furter requests. which is an emptyarray
@@ -439,13 +427,13 @@ class Aspsms
         // set back send status buffer string
         $this->sendStatus = null;
     }
-    
+
     /**
      * Set transfer options/values into currentOptions. Only options which are in the list $validOptions
      * are allowed to set.
      *
-     * @param string    $key    The Option-Key/Name
-     * @param string    $value  The value for the Option-Key
+     * @param  string    $key   The Option-Key/Name
+     * @param  string    $value The value for the Option-Key
      * @return boolean
      * @throws Exception
      */
@@ -460,12 +448,12 @@ class Aspsms
         // default return
         return true;
     }
-    
+
     /**
      * Set multiple transfer options into currentOptions. Only options which are in the list
      * $validOptions are allowed to set.
      *
-     * @param array     $options    An associativ array containg the the option-keys and option-key-values
+     * @param  array     $options An associativ array containg the the option-keys and option-key-values
      * @return boolean
      * @throws Exception
      */
@@ -483,12 +471,12 @@ class Aspsms
 
         return true;
     }
-    
+
     /**
      * Gets all options/values. If there is no value set for the needed $optionKeys the function sets
      * an empty default string '' and returns all requests $optionKeys
      *
-     * @param array     $optionKeys     All options which are requested
+     * @param  array $optionKeys All options which are requested
      * @return array
      */
     private function getOptions(array $optionKeys)
@@ -507,12 +495,12 @@ class Aspsms
 
         return $options;
     }
-    
+
     /**
      * The delivery status return timestamp seems not to be very readable, so we have to split
      * the input string by "hand"
      *
-     * @param string    $date   Input date string like: 30012013223015
+     * @param  string $date Input date string like: 30012013223015
      * @return string
      */
     private function dateSplitter($date)
