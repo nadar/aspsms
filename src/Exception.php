@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace Aspsms;
 
 /**
@@ -23,4 +22,5 @@ namespace Aspsms;
  * @see https://github.com/nadar/aspsms
  */
 class Exception extends \Exception
-{}
+{
+}

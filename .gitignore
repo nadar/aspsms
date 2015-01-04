@@ -1,2 +1,4 @@
-local
-vendor
+/bin
+/vendor
+
+phpunit.xml

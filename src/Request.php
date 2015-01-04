@@ -12,22 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace Aspsms;
-
-use Aspsms\Exception;
 
 /**
  * Little helper class to make the curl-post-request to the aspsms server.
- * 
+ *
  * Usage example:
- * 
+ *
  * $request = new \Request('https://webservice.aspsms.com/aspsmsx2.asmx/CheckCredits');
  * // transfer the request
  * $response = $request->transfer();
  * // flush the request object
  * $request->flush();
- * 
+ *
  * @package Aspsms
  * @author nadar <n@adar.ch>
  * @see https://github.com/nadar/aspsms
@@ -36,7 +33,7 @@ class Request
 {
     /**
      * Default options for the curl request
-     * 
+     *
      * @param array
      */
     private $options = array(
@@ -48,19 +45,19 @@ class Request
     
     /**
      * All values which are provided trought value() or __construct()
-     * 
+     *
      * @param array
      */
     private $values = array();
     
     /**
      * AspsmsRequest constructor requerd call service url.
-     * 
+     *
      * @param string    $url                The called webservice url
-     * @param array     $values[optional]   Values can be set direct in the class construct or 
-     *                                      via the value() method.
+     * @param array     $values[optional]   Values can be set direct in the class construct or via the value() method.
      */
-    public function __construct ($url, array $values = array()) {
+    public function __construct($url, array $values = array())
+    {
         // assign CURLOPT_URL into options array
         $this->options[CURLOPT_URL] = $url;
         // set basic value keys into values array
@@ -69,38 +66,41 @@ class Request
     
     /**
      * Optional method to set values.
-     * 
+     *
      * @param string    $key    The POST-FIELD-KEY
      * @param string    $value  The value of the postfield
      * @return boolean
      */
-    public function value($key, $value) {
+    public function value($key, $value)
+    {
         // save values into values array (great comment)
         $this->values[$key] = $value;
-        // default return
+
         return true;
     }
     
     /**
      * Unset all values from the values array to make new requests.
-     * 
+     *
      * @return boolean
      */
-    public function flush () {
+    public function flush()
+    {
         // overwrite $values with empty array()
         $this->values = array();
-        // default return
+
         return true;
     }
     
     /**
-     * Could not use http_build_query() because of &, ; & : signs changing, need to build a 
+     * Could not use http_build_query() because of &, ; & : signs changing, need to build a
      * simple small class to build the strings.
      * @todo url_encoding the values (verify affecting requests first)
      * @param array     $values     Key value pared parameter values
-     * @return string 
+     * @return string
      */
-    private function buildPostfields ($values) {
+    private function buildPostfields($values)
+    {
         $params = array();
         foreach ($values as $k => $v) {
             $params[] = $k.'='.$v;
@@ -110,11 +110,12 @@ class Request
     
     /**
      * Init the main curl excution.
-     * 
+     *
      * @return string/mixed
-     * @throws AspsmsException
+     * @throws Exception
      */
-    public function transfer () {
+    public function transfer()
+    {
         // prepare postfields
         $this->options[CURLOPT_POSTFIELDS] = $this->buildPostfields($this->values);
         // init curl
@@ -137,6 +138,6 @@ class Request
             return $nodeContent;
         } else {
             throw new Exception("API response seems not valid! Response: \"" . trim($response) . "\"");
-        } 
+        }
     }
 }
