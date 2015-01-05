@@ -219,12 +219,9 @@ class Aspsms
             "URLDeliveryNotification",
             "URLNonDeliveryNotification",
         )));
-        // explode the response
-        $result = explode(":", $response);
-        // error while exploding the response
-        if (count($result) == 0 || !is_array($result)) {
-            throw new Exception("Something went wrong while working with the sendTextSms response. Response: \"{$response}\"");
-        }
+        
+        $result = $this->parseResponse($response);
+        
         // verify if the status code exists in sendStatusCodes
         if (!array_key_exists($result[1], $this->sendStatusCodes)) {
             throw new Exception("Error while printing the response code into sendStatus. ResponseCode seems not valid. Response: \"{$response}\"");
@@ -235,7 +232,7 @@ class Aspsms
         if ($result[1] !== "1") {
             return false;
         }
-        // response true
+        
         return true;
     }
 
@@ -284,7 +281,7 @@ class Aspsms
             }
             // set default value for reasoncode
             if ($result[1] == 0) {
-                // no error, but reasocode seems to 000 anytime when success... which is wrong!
+                // no error, but the reponse is 000 even when request was successful
                 $reasoncode = "-";
             } else {
                 // set string for reasoncode
@@ -328,15 +325,29 @@ class Aspsms
         // make request for "CheckCredits" aspsms method
         $response = $this->request("CheckCredits");
         // explode the response
-        $result = explode(":", $response);
-        // error while exploding the response
-        if (count($result) == 0 || !is_array($result)) {
-            throw new Exception("Something went wrong while working with the credits response. Response: \"{$response}\"");
-        }
+        $result = $this->parseResponse($response);
         // return the amount
         return (int) $result[1];
     }
 
+    /**
+     * Parse the response into an array and see if its valid.
+     * 
+     * @param string $response
+     * @throws Exception
+     * @return array
+     */
+    private function parseResponse($response)
+    {
+        $result = explode(":", $response);
+        
+        if (count($result) == 0 || !is_array($result)) {
+            throw new Exception(sprintf("Could not parse response '%s'.", $response));
+        }
+        
+        return $result;
+    }
+    
     /**
      * Provides the possibility to read the sendstatus as a readable-response-string (from $sendStatusCodes array)
      *
