@@ -1,17 +1,5 @@
 <?php
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 namespace Aspsms;
 
 /**
@@ -40,21 +28,21 @@ class Request
         CURLOPT_TIMEOUT => 10,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_POST => true
+        CURLOPT_POST => true,
     );
-    
+
     /**
      * All values which are provided trought value() or __construct()
      *
      * @param array
      */
     private $values = array();
-    
+
     /**
      * AspsmsRequest constructor requerd call service url.
      *
-     * @param string    $url                The called webservice url
-     * @param array     $values[optional]   Values can be set direct in the class construct or via the value() method.
+     * @param string $url              The called webservice url
+     * @param array  $values[optional] Values can be set direct in the class construct or via the value() method.
      */
     public function __construct($url, array $values = array())
     {
@@ -63,12 +51,12 @@ class Request
         // set basic value keys into values array
         $this->values = $values;
     }
-    
+
     /**
      * Optional method to set values.
      *
-     * @param string    $key    The POST-FIELD-KEY
-     * @param string    $value  The value of the postfield
+     * @param  string  $key   The POST-FIELD-KEY
+     * @param  string  $value The value of the postfield
      * @return boolean
      */
     public function value($key, $value)
@@ -78,7 +66,7 @@ class Request
 
         return true;
     }
-    
+
     /**
      * Unset all values from the values array to make new requests.
      *
@@ -91,12 +79,12 @@ class Request
 
         return true;
     }
-    
+
     /**
      * Could not use http_build_query() because of &, ; & : signs changing, need to build a
      * simple small class to build the strings.
      * @todo url_encoding the values (verify affecting requests first)
-     * @param array     $values     Key value pared parameter values
+     * @param  array  $values Key value pared parameter values
      * @return string
      */
     private function buildPostfields($values)
@@ -105,9 +93,10 @@ class Request
         foreach ($values as $k => $v) {
             $params[] = $k.'='.$v;
         }
+
         return implode("&", $params);
     }
-    
+
     /**
      * Init the main curl excution.
      *
@@ -137,7 +126,7 @@ class Request
             // return the content
             return $nodeContent;
         } else {
-            throw new Exception("API response seems not valid! Response: \"" . trim($response) . "\"");
+            throw new Exception("API response seems not valid! Response: \"".trim($response)."\"");
         }
     }
 }

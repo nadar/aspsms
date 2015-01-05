@@ -12,9 +12,9 @@
         </testsuite>
     </testsuites>
     <php>
-        <const name="USER_KEY" value="" />
-        <const name="USER_PASS" value="" />
-        <const name="SMS_NUMBER" value="" />
-        <const name="SMS_TRACKING" value="" />
+        <!--<const name="USER_KEY" value="" />-->
+        <!--<const name="USER_PASS" value="" />-->
+        <!--<const name="SMS_NUMBER" value="" />-->
+        <!--<const name="SMS_TRACKING" value="" />-->
     </php>
 </phpunit>
