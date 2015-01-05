@@ -82,7 +82,7 @@ class Request
 
     /**
      * Could not use http_build_query() because of &, ; & : signs changing, need to build a
-     * simple small class to build the strings.
+     * simple function to build the strings.
      * @todo url_encoding the values (verify affecting requests first)
      * @param  array  $values Key value pared parameter values
      * @return string
@@ -126,7 +126,7 @@ class Request
             // return the content
             return $nodeContent;
         } else {
-            throw new Exception("API response seems not valid! Response: \"".trim($response)."\"");
+            throw new Exception(sprintf("Invalid API Response '%s'", trim($response)));
         }
     }
 }
