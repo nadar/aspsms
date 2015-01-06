@@ -219,9 +219,9 @@ class Aspsms
             "URLDeliveryNotification",
             "URLNonDeliveryNotification",
         )));
-        
+
         $result = $this->parseResponse($response);
-        
+
         // verify if the status code exists in sendStatusCodes
         if (!array_key_exists($result[1], $this->sendStatusCodes)) {
             throw new Exception("Error while printing the response code into sendStatus. ResponseCode seems not valid. Response: \"{$response}\"");
@@ -232,7 +232,7 @@ class Aspsms
         if ($result[1] !== "1") {
             return false;
         }
-        
+
         return true;
     }
 
@@ -332,22 +332,22 @@ class Aspsms
 
     /**
      * Parse the response into an array and see if its valid.
-     * 
-     * @param string $response
+     *
+     * @param  string    $response
      * @throws Exception
      * @return array
      */
     private function parseResponse($response)
     {
         $result = explode(":", $response);
-        
+
         if (count($result) == 0 || !is_array($result)) {
             throw new Exception(sprintf("Could not parse response '%s'.", $response));
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Provides the possibility to read the sendstatus as a readable-response-string (from $sendStatusCodes array)
      *
@@ -456,7 +456,7 @@ class Aspsms
         }
         // set the options into the currentOptions list
         $this->currentOptions[$key] = $value;
-        // default return
+
         return true;
     }
 
@@ -472,12 +472,7 @@ class Aspsms
     {
         // loop the $options items
         foreach ($options as $key => $value) {
-            // see if the key exists int options list
-            if (!in_array($key, $this->validOptions)) {
-                throw new Exception("setOptions: Could not find the option \"$key\" in the validOptions list!");
-            }
-            // set the options into the currentOptions list
-            $this->currentOptions[$key] = $value;
+            $this->setOption($key, $value);
         }
 
         return true;
@@ -516,14 +511,8 @@ class Aspsms
      */
     private function dateSplitter($date)
     {
-        // get the date pieces
-        $d = substr($date, 0, 2);
-        $m = substr($date, 2, 2);
-        $y = substr($date, 4, 4);
-        $h = substr($date, 8, 2);
-        $i = substr($date, 10, 2);
-        $s = substr($date, 12, 2);
+        $datetime = \DateTime::createFromFormat('dmYHis', $date);
 
-        return "{$d}.{$m}.{$y} {$h}:{$i}:{$s}";
+        return $datetime->format('d.m.Y H:i:s');
     }
 }
