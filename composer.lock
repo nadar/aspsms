@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ed227eb378a6e25c60852f900012e82e",
+    "hash": "d4992aa490f930acf1e8835b24e302e3",
     "packages": [],
     "packages-dev": [
         {
@@ -1160,7 +1160,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "nadar/aspsms": 20,
         "fabpot/php-cs-fixer": 0,
         "phpunit/phpunit": 0
     },
