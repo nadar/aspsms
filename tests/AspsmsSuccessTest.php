@@ -53,6 +53,8 @@ class AspsmsSuccessTest extends \PHPUnit_Framework_TestCase
         // see if multiple tracking codes exist.
         if (array_key_exists(SMS_TRACKING, $response)) {
             $array = $response[SMS_TRACKING];
+        } else {
+            $array = $response;
         }
 
         $this->assertArrayHasKey('transactionReferenceNumber', $array);
