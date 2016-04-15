@@ -110,8 +110,30 @@ class Aspsms
      */
     private $sendStatusCodes = array(
         1 => "Ok",
+        2 => "Connect failed.",
         3 => "Authorization failed (wrong userkey and/or password).",
+        4 => "Binary file not found. Please check the location.",
         5 => "Not enough Credits available.",
+        6 => "Time out error.",
+        7 => "Transmission error. Please try it again.",
+        8 => "Invalid UserKey. Please check the spelling of the UserKey.",
+        9 => "Invalid Password.",
+        10 => "Invalid originator. A maximum of 11 characters is allowed for alphanumeric originators.",
+        11 => "Invalid message date. Please verify the data.",
+        12 => "Invalid binary data. Please verify the data.",
+        13 => "Invalid binary file. Please check the file type.",
+        14 => "Invalid MCC. Please check the number.",
+        15 => "Invalid MNC. Please check the number.",
+        16 => "Invalid XSer.",
+        17 => "Invalid URL buffered message notification string.",
+        18 => "Invalid URL delivery notification string.",
+        19 => "Invalid URL non delivery notification string.",
+        20 => "Missing a recipient. Please specify at least one recipient.",
+        21 => "Missing binary data. Please specify some data.",
+        22 => "Invalid deferred delivery time. Please check the format.",
+        23 => "Missing transaction reference number.",
+        24 => "Service temporarely not available.",
+        25 => "User access denied.",
     );
 
     /**
