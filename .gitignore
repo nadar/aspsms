@@ -2,3 +2,6 @@
 /vendor
 
 phpunit.xml
+/.settings/
+/.buildpath
+/.project
