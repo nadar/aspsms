@@ -286,7 +286,7 @@ class Aspsms
         // foreach multiple response codes
         foreach (explode(";;", $response) as $trackResponse) {
             // verify empty strings
-            if (strlen($trackResponse) == 0 || empty($trackResponse)) {
+            if (strlen($trackResponse) == 0 || empty($trackResponse) || $trackResponse === ";") {
                 // skip this entrie
                 continue;
             }
@@ -309,15 +309,27 @@ class Aspsms
                 // set string for reasoncode
                 $reasoncode = (isset($result[4]) && isset($this->deliveryReasonCodes[$result[4]])) ? $this->deliveryReasonCodes[$result[4]] : null;
             }
-            // add assoc array
-            $responseArray[$result[0]] = array(
-                "transactionReferenceNumber" => $result[0],
-                "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
-                "deliveryStatusBool" => ($result[1] == 0) ? true : false,
-                "submissionDate" => $this->dateSplitter($result[2]),
-                "notificationDate" => $this->dateSplitter($result[3]),
-                "reasoncode" => $reasoncode,
-            );
+            // There are parameters missing from the standard response if sms is not submitted yet.
+            if ($result[1] === "-1") {
+                $responseArray[$result[0]] = array(
+                    "transactionReferenceNumber" => $result[0],
+                    "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
+                    "deliveryStatusBool" => ($result[1] == 0) ? true : false,
+                    "submissionDate" => null,
+                    "notificationDate" => null,
+                    "reasoncode" => null,
+                );
+            } else {
+                // add assoc array
+                $responseArray[$result[0]] = array(
+                    "transactionReferenceNumber" => $result[0],
+                    "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
+                    "deliveryStatusBool" => ($result[1] == 0) ? true : false,
+                    "submissionDate" => $this->dateSplitter($result[2]),
+                    "notificationDate" => $this->dateSplitter($result[3]),
+                    "reasoncode" => $reasoncode,
+                );
+            }
             // add i+1
             $i++;
         }
