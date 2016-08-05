@@ -360,6 +360,14 @@ class Aspsms
         $response = $this->request("CheckCredits");
         // explode the response
         $result = $this->parseResponse($response);
+        // check result
+        if($result[0] !== "Credits"){
+            if($result[0] === "StatusCode" && array_key_exists($result[1], $this->sendStatusCodes)){
+                throw new Exception("An error occurred while checking the account balance: " . $this->sendStatusCodes[$result[1]]);
+            } else {
+                throw new Exception("An unknown error occurred while checking the account balance");
+            }
+        }
         // return the amount
         return (int) $result[1];
     }
