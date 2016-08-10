@@ -32,14 +32,14 @@ class Request
     );
 
     /**
-     * All values which are provided trought value() or __construct()
+     * All values which are provided through value() or __construct()
      *
      * @param array
      */
     private $values = array();
 
     /**
-     * AspsmsRequest constructor requerd call service url.
+     * AspsmsRequest constructor requires call service url.
      *
      * @param string $url              The called webservice url
      * @param array  $values[optional] Values can be set direct in the class construct or via the value() method.
@@ -98,7 +98,7 @@ class Request
     }
 
     /**
-     * Init the main curl excution.
+     * Initiates the main curl execution.
      *
      * @return string/mixed
      * @throws Exception

@@ -46,7 +46,7 @@ class AspsmsSuccessTest extends \PHPUnit_Framework_TestCase
 
     public function testDeliveryStatus()
     {
-        // wating for aspsms to proceed the delivery
+        // waiting for aspsms to proceed the delivery
         sleep(5);
         // get the response
         $response = $this->aspsms->deliveryStatus(SMS_TRACKING);

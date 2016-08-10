@@ -27,7 +27,7 @@ class Aspsms
 
     /**
      * Contains the userkey which is provided from the aspsms.com webpage under the menu
-     * point "USERKEY". Looks some what like this FAG9XPAUQLQ3
+     * point "USERKEY". Looks somewhat like this FAG9XPAUQLQ3
      *
      * @var string
      */
@@ -42,7 +42,7 @@ class Aspsms
 
     /**
      * All sms status service reason codes which appears to be used when u have a not usual
-     * deliver status. There is an optional newsletter from 2009 with some more informations [see]
+     * deliver status. There is an optional newsletter from 2009 with some more information [see]
      *
      * @see http://www.aspsms.de/newsletter/html/en/200905/
      * @var array
@@ -92,7 +92,7 @@ class Aspsms
     );
 
     /**
-     * Contains all delivey sms notification status
+     * Contains all delivery sms notification status
      *
      * @var array
      */
@@ -132,7 +132,7 @@ class Aspsms
         21 => "Missing binary data. Please specify some data.",
         22 => "Invalid deferred delivery time. Please check the format.",
         23 => "Missing transaction reference number.",
-        24 => "Service temporarely not available.",
+        24 => "Service temporarily not available.",
         25 => "User access denied.",
     );
 
@@ -144,7 +144,7 @@ class Aspsms
     private $sendStatus = null;
 
     /**
-     * Contains all valid option parameters which can be delivere trough option
+     * Contains all valid option parameters which can be delivered trough option
      * arguments in functions.
      *
      * @var array
@@ -171,7 +171,7 @@ class Aspsms
     private $currentOptions = array();
 
     /**
-     * Class construct contains basic informations which are needed for each request type.
+     * Class construct contains basic information is needed needed for each request type.
      *
      * @param string $userkey           The userkey provided from aspsms.net
      * @param string $password          The blank passwort from your aspsms.net login
@@ -208,7 +208,7 @@ class Aspsms
      * @param  string    $message           Contains the message text for the user. can only be 160 chars
      * @param  array     $recipients        Array containing the recipients, where the key is the tracking number and the value
      *                                      equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
-     * @param  array     $options[optional] Basic associativ array, available keys see $validOptions array. Commonly used to provide
+     * @param  array     $options[optional] Basic associative array, available keys see $validOptions array. Commonly used to provide
      *                                      AffiliateId or Originator values.
      * @return boolean
      * @throws Exception
@@ -259,9 +259,9 @@ class Aspsms
     }
 
     /**
-     * Getting all informations from sms delivery system for the provided tracking number (which you put besides the recipients)
+     * Getting all information from the sms delivery system for the provided tracking number (which you put besides the recipients)
      *
-     * Accoring to the Documentation on aspsms.net a response as partial seperated by semicolon (;) below the descriptions of the parts:
+     * According to the Documentation on aspsms.net a response as partial separated by semicolon (;) below the descriptions of the parts:
      * => TransactionReferenceNumber ; DeliveryStatus ; SubmissionDate ; NotificationDate ; Reasoncode
      * Below some sample responses from the "InquireDeliveryNotifications" method:
      * => success-delivery: 1359553540;0;30012013144546;30012013144555;000;;
@@ -401,7 +401,7 @@ class Aspsms
     }
 
     /**
-     * Delete all not allowed signes from a tracking number.
+     * Delete all not allowed signs from a tracking number.
      *
      * @param  string $trackingNumber The tracking number to verify
      * @return string
@@ -413,7 +413,7 @@ class Aspsms
     }
 
     /**
-     * Delete not allowed signes from the mobile phone number.
+     * Delete not allowed signs from the mobile phone number.
      *
      * @param  string $mobileNumber The mobile number to verify
      * @return string
@@ -469,7 +469,7 @@ class Aspsms
 
     /**
      * After a request like smssend, deliverystatus or creditscheck we set back the default
-     * options value for furter requests. which is an emptyarray
+     * options value for further requests. which is an emptyarray
      *
      * @return void
      */
@@ -506,7 +506,7 @@ class Aspsms
      * Set multiple transfer options into currentOptions. Only options which are in the list
      * $validOptions are allowed to set.
      *
-     * @param  array     $options An associativ array containg the the option-keys and option-key-values
+     * @param  array     $options An associative array containing the option-keys and option-key-values
      * @return boolean
      * @throws Exception
      */
