@@ -315,7 +315,7 @@ class Aspsms
                     "transactionReferenceNumber" => $result[0],
                     "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
                     "deliveryStatusBool" => ($result[1] == 0) ? true : false,
-                    "submissionDate" => null,
+                    "submissionDate" => isset($result[2]) ? $this->dateSplitter($result[2]) : null,
                     "notificationDate" => null,
                     "reasoncode" => null,
                 );
@@ -363,9 +363,9 @@ class Aspsms
         // check result
         if($result[0] !== "Credits"){
             if($result[0] === "StatusCode" && array_key_exists($result[1], $this->sendStatusCodes)){
-                throw new Exception("An error occurred while checking the account balance: " . $this->sendStatusCodes[$result[1]]);
+                throw new Exception($this->sendStatusCodes[$result[1]]);
             } else {
-                throw new Exception("An unknown error occurred while checking the account balance");
+                throw new Exception("An unknown error occurred while checking the account balance. Response: \"{$response}\"");
             }
         }
         // return the amount

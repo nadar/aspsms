@@ -44,6 +44,22 @@ class AspsmsSuccessTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("0123456789", $this->aspsms->verifyMobileNumber($value));
     }
 
+    public function testImmediateDeliveryStatus()
+    {
+        // get the response
+        $response = $this->aspsms->deliveryStatus(SMS_TRACKING);
+        // see if multiple tracking codes exist.
+        if (array_key_exists(SMS_TRACKING, $response)) {
+            $array = $response[SMS_TRACKING];
+        } else {
+            $array = $response;
+        }
+
+        $this->assertArrayHasKey('transactionReferenceNumber', $array);
+        $this->assertArrayHasKey('deliveryStatus', $array);
+        $this->assertArrayHasKey('deliveryStatusBool', $array);
+    }
+    
     public function testDeliveryStatus()
     {
         // waiting for aspsms to proceed the delivery
