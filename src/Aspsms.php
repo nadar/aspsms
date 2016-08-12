@@ -205,7 +205,7 @@ class Aspsms
      *     "AffiliateId" => "1234567"
      * ));
      *
-     * @param  string    $message           Contains the message text for the user. can only be 160 chars
+     * @param  string    $message           Contains the message text for the user.
      * @param  array     $recipients        Array containing the recipients, where the key is the tracking number and the value
      *                                      equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
      * @param  array     $options[optional] Basic associative array, available keys see $validOptions array. Commonly used to provide
@@ -266,6 +266,8 @@ class Aspsms
      * Below some sample responses from the "InquireDeliveryNotifications" method:
      * => success-delivery: 1359553540;0;30012013144546;30012013144555;000;;
      * => failure-delivery: 1359555046;2;30012013151053;30012013151053;206;;
+     * 
+     * Please note: If you have multiple sms sent with the same tracking number only the status for the newest sms will be returned.
      *
      * @param  mixed     $tracknr The tracking number which is provided when setting the recipients. Can be an array of tracking numbers.
      * @return array     (If an array with multiple tracking numbers is provided the response as an assoc array for each tracking number.)
@@ -281,8 +283,6 @@ class Aspsms
         )));
         // response array
         $responseArray = array();
-        // count the response array
-        $i = 0;
         // foreach multiple response codes
         foreach (explode(";;", $response) as $trackResponse) {
             // verify empty strings
@@ -290,6 +290,8 @@ class Aspsms
                 // skip this entrie
                 continue;
             }
+            // remove leading semicolons and new lines
+            $trackResponse = ltrim($trackResponse, ";\n\r");
             // explode the response
             $result = explode(";", $trackResponse);
             // error while exploding the response
@@ -330,15 +332,13 @@ class Aspsms
                     "reasoncode" => $reasoncode,
                 );
             }
-            // add i+1
-            $i++;
         }
         // see if we have an error with the response
-        if ($i === 0) {
+        if (count($responseArray) === 0) {
             throw new Exception("The provided Tracking Number does not exists.");
         }
         // if there is only 1 result, we have to return only the single assoc array
-        if ($i === 1) {
+        if (count($responseArray) === 1) {
             // return the first element (there is only one)
             foreach ($responseArray as $item) {
                 return $item;
@@ -361,8 +361,8 @@ class Aspsms
         // explode the response
         $result = $this->parseResponse($response);
         // check result
-        if($result[0] !== "Credits"){
-            if($result[0] === "StatusCode" && array_key_exists($result[1], $this->sendStatusCodes)){
+        if ($result[0] !== "Credits") {
+            if ($result[0] === "StatusCode" && array_key_exists($result[1], $this->sendStatusCodes)) {
                 throw new Exception($this->sendStatusCodes[$result[1]]);
             } else {
                 throw new Exception("An unknown error occurred while checking the account balance. Response: \"{$response}\"");
