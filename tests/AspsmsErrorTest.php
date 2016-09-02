@@ -48,4 +48,13 @@ class AspsmsErrorTest extends \PHPUnit_Framework_TestCase
     {
         $this->aspsmsValid->deliveryStatus("UNKNOWN_TRACKING_CODE");
     }
+    
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Authorization failed (wrong userkey and/or password).
+     */
+    public function testInvalidCredits()
+    {
+        $this->aspsms->credits();
+    }
 }

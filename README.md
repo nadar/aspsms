@@ -26,7 +26,7 @@ Usage
         'Originator' => '<MY_SENDER_NAME>'
     ));
 
-    // set message and recipients with tracking theyr individual tracking numbers.
+    // set message and recipients with tracking their individual tracking numbers.
     // attention: verify your tracking numbers first with $aspsms->verifyTrackingNumber(..);
     $send = $aspsms->sendTextSms('<YOUR_SMS_MESSAGE>', array(
         '<TRACKING_NR1>' => '<MOBILE_PHONE_NR1>',
@@ -34,7 +34,7 @@ Usage
         '<TRACKING_NR3>' => '<MOBILE_PHONE_NR3>'
     ));
 
-    // the message was rejected by aspsms or your authentification credentials where wrong.
+    // the message was rejected by aspsms or your authentication credentials where wrong.
     if (!$send) {
         echo "[ASPSMS] Error while sending text message: " . $aspsms->getSendStatus();
     }
@@ -64,7 +64,7 @@ Contributing
 Unit Tests
 ----------
 
-In order to run the test suite, install the developement dependencies:
+In order to run the test suite, install the development dependencies:
 
 ```
 $ composer install --dev

@@ -27,7 +27,7 @@ class Aspsms
 
     /**
      * Contains the userkey which is provided from the aspsms.com webpage under the menu
-     * point "USERKEY". Looks some what like this FAG9XPAUQLQ3
+     * point "USERKEY". Looks somewhat like this FAG9XPAUQLQ3
      *
      * @var string
      */
@@ -42,7 +42,7 @@ class Aspsms
 
     /**
      * All sms status service reason codes which appears to be used when u have a not usual
-     * deliver status. There is an optional newsletter from 2009 with some more informations [see]
+     * deliver status. There is an optional newsletter from 2009 with some more information [see]
      *
      * @see http://www.aspsms.de/newsletter/html/en/200905/
      * @var array
@@ -92,7 +92,7 @@ class Aspsms
     );
 
     /**
-     * Contains all delivey sms notification status
+     * Contains all delivery sms notification status
      *
      * @var array
      */
@@ -132,7 +132,7 @@ class Aspsms
         21 => "Missing binary data. Please specify some data.",
         22 => "Invalid deferred delivery time. Please check the format.",
         23 => "Missing transaction reference number.",
-        24 => "Service temporarely not available.",
+        24 => "Service temporarily not available.",
         25 => "User access denied.",
     );
 
@@ -144,7 +144,7 @@ class Aspsms
     private $sendStatus = null;
 
     /**
-     * Contains all valid option parameters which can be delivere trough option
+     * Contains all valid option parameters which can be delivered trough option
      * arguments in functions.
      *
      * @var array
@@ -171,7 +171,7 @@ class Aspsms
     private $currentOptions = array();
 
     /**
-     * Class construct contains basic informations which are needed for each request type.
+     * The class constructor contains basic information that is needed for each request type.
      *
      * @param string $userkey           The userkey provided from aspsms.net
      * @param string $password          The blank passwort from your aspsms.net login
@@ -205,10 +205,10 @@ class Aspsms
      *     "AffiliateId" => "1234567"
      * ));
      *
-     * @param  string    $message           Contains the message text for the user. can only be 160 chars
+     * @param  string    $message           Contains the message text for the user.
      * @param  array     $recipients        Array containing the recipients, where the key is the tracking number and the value
      *                                      equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
-     * @param  array     $options[optional] Basic associativ array, available keys see $validOptions array. Commonly used to provide
+     * @param  array     $options[optional] Basic associative array, available keys see $validOptions array. Commonly used to provide
      *                                      AffiliateId or Originator values.
      * @return boolean
      * @throws Exception
@@ -259,13 +259,15 @@ class Aspsms
     }
 
     /**
-     * Getting all informations from sms delivery system for the provided tracking number (which you put besides the recipients)
+     * Getting all information from the sms delivery system for the provided tracking number (which you put besides the recipients)
      *
-     * Accoring to the Documentation on aspsms.net a response as partial seperated by semicolon (;) below the descriptions of the parts:
+     * According to the Documentation on aspsms.net a response as partial separated by semicolon (;) below the descriptions of the parts:
      * => TransactionReferenceNumber ; DeliveryStatus ; SubmissionDate ; NotificationDate ; Reasoncode
      * Below some sample responses from the "InquireDeliveryNotifications" method:
      * => success-delivery: 1359553540;0;30012013144546;30012013144555;000;;
      * => failure-delivery: 1359555046;2;30012013151053;30012013151053;206;;
+     * 
+     * Please note: If you have multiple sms sent with the same tracking number only the status for the newest sms will be returned.
      *
      * @param  mixed     $tracknr The tracking number which is provided when setting the recipients. Can be an array of tracking numbers.
      * @return array     (If an array with multiple tracking numbers is provided the response as an assoc array for each tracking number.)
@@ -281,15 +283,15 @@ class Aspsms
         )));
         // response array
         $responseArray = array();
-        // count the response array
-        $i = 0;
         // foreach multiple response codes
         foreach (explode(";;", $response) as $trackResponse) {
             // verify empty strings
-            if (strlen($trackResponse) == 0 || empty($trackResponse)) {
+            if (strlen($trackResponse) == 0 || empty($trackResponse) || $trackResponse === ";") {
                 // skip this entrie
                 continue;
             }
+            // remove leading semicolons and new lines
+            $trackResponse = ltrim($trackResponse, ";\n\r");
             // explode the response
             $result = explode(";", $trackResponse);
             // error while exploding the response
@@ -309,24 +311,34 @@ class Aspsms
                 // set string for reasoncode
                 $reasoncode = (isset($result[4]) && isset($this->deliveryReasonCodes[$result[4]])) ? $this->deliveryReasonCodes[$result[4]] : null;
             }
-            // add assoc array
-            $responseArray[$result[0]] = array(
-                "transactionReferenceNumber" => $result[0],
-                "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
-                "deliveryStatusBool" => ($result[1] == 0) ? true : false,
-                "submissionDate" => $this->dateSplitter($result[2]),
-                "notificationDate" => $this->dateSplitter($result[3]),
-                "reasoncode" => $reasoncode,
-            );
-            // add i+1
-            $i++;
+            // There are parameters missing from the standard response if sms is not submitted yet.
+            if ($result[1] === "-1") {
+                $responseArray[$result[0]] = array(
+                    "transactionReferenceNumber" => $result[0],
+                    "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
+                    "deliveryStatusBool" => ($result[1] == 0) ? true : false,
+                    "submissionDate" => isset($result[2]) ? $this->dateSplitter($result[2]) : null,
+                    "notificationDate" => null,
+                    "reasoncode" => null,
+                );
+            } else {
+                // add assoc array
+                $responseArray[$result[0]] = array(
+                    "transactionReferenceNumber" => $result[0],
+                    "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
+                    "deliveryStatusBool" => ($result[1] == 0) ? true : false,
+                    "submissionDate" => $this->dateSplitter($result[2]),
+                    "notificationDate" => $this->dateSplitter($result[3]),
+                    "reasoncode" => $reasoncode,
+                );
+            }
         }
         // see if we have an error with the response
-        if ($i === 0) {
+        if (count($responseArray) === 0) {
             throw new Exception("The provided Tracking Number does not exists.");
         }
         // if there is only 1 result, we have to return only the single assoc array
-        if ($i === 1) {
+        if (count($responseArray) === 1) {
             // return the first element (there is only one)
             foreach ($responseArray as $item) {
                 return $item;
@@ -348,6 +360,14 @@ class Aspsms
         $response = $this->request("CheckCredits");
         // explode the response
         $result = $this->parseResponse($response);
+        // check result
+        if ($result[0] !== "Credits") {
+            if ($result[0] === "StatusCode" && array_key_exists($result[1], $this->sendStatusCodes)) {
+                throw new Exception($this->sendStatusCodes[$result[1]]);
+            } else {
+                throw new Exception("An unknown error occurred while checking the account balance. Response: \"{$response}\"");
+            }
+        }
         // return the amount
         return (int) $result[1];
     }
@@ -381,7 +401,7 @@ class Aspsms
     }
 
     /**
-     * Delete all not allowed signes from a tracking number.
+     * Delete all not allowed signs from a tracking number.
      *
      * @param  string $trackingNumber The tracking number to verify
      * @return string
@@ -393,7 +413,7 @@ class Aspsms
     }
 
     /**
-     * Delete not allowed signes from the mobile phone number.
+     * Delete not allowed signs from the mobile phone number.
      *
      * @param  string $mobileNumber The mobile number to verify
      * @return string
@@ -449,7 +469,7 @@ class Aspsms
 
     /**
      * After a request like smssend, deliverystatus or creditscheck we set back the default
-     * options value for furter requests. which is an emptyarray
+     * options value for further requests. which is an emptyarray
      *
      * @return void
      */
@@ -486,7 +506,7 @@ class Aspsms
      * Set multiple transfer options into currentOptions. Only options which are in the list
      * $validOptions are allowed to set.
      *
-     * @param  array     $options An associativ array containg the the option-keys and option-key-values
+     * @param  array     $options An associative array containing the option-keys and option-key-values
      * @return boolean
      * @throws Exception
      */

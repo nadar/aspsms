@@ -24,6 +24,16 @@ class AspsmsSuccessTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(true, $sendSms);
     }
+    
+    public function testSendLongTextSms()
+    {
+        // text length: 212
+         $sendSms = $this->aspsms->sendTextSms("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.", array(
+            SMS_TRACKING => SMS_NUMBER,
+        ));
+
+        $this->assertEquals(true, $sendSms);
+    }
 
     public function testVerifyTrackingNumber()
     {
@@ -44,9 +54,25 @@ class AspsmsSuccessTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("0123456789", $this->aspsms->verifyMobileNumber($value));
     }
 
+    public function testImmediateDeliveryStatus()
+    {
+        // get the response
+        $response = $this->aspsms->deliveryStatus(SMS_TRACKING);
+        // see if multiple tracking codes exist.
+        if (array_key_exists(SMS_TRACKING, $response)) {
+            $array = $response[SMS_TRACKING];
+        } else {
+            $array = $response;
+        }
+
+        $this->assertArrayHasKey('transactionReferenceNumber', $array);
+        $this->assertArrayHasKey('deliveryStatus', $array);
+        $this->assertArrayHasKey('deliveryStatusBool', $array);
+    }
+    
     public function testDeliveryStatus()
     {
-        // wating for aspsms to proceed the delivery
+        // waiting for aspsms to proceed the delivery
         sleep(5);
         // get the response
         $response = $this->aspsms->deliveryStatus(SMS_TRACKING);

@@ -28,15 +28,15 @@ $options = array(
     "Originator" => "PHP ASPSMS CLASS",
 );
 
-// array with numbers and the generated unique tracking code. You should store this informations
-// to a database to request tracking informations later on.
+// array with numbers and the generated unique tracking code. You should store this information
+// to a database to request tracking information later on.
 $recipients = array(
     "4565-".uniqid(microtime()) => "0041 079 123 45 65",
     "5678-".uniqid(microtime()) => "0041 079 123 56 78",
     "8789-".uniqid(microtime()) => "0043 078 665 87 89",
 );
 
-// create the aspsms object with they user_key, user_pass and options
+// create the aspsms object with the user_key, user_pass and options
 $aspsms = new Aspsms(USER_KEY, USER_PASS, $options);
 
 // send the message to the network
