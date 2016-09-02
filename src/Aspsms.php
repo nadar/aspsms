@@ -171,7 +171,7 @@ class Aspsms
     private $currentOptions = array();
 
     /**
-     * Class construct contains basic information is needed needed for each request type.
+     * The class constructor contains basic information that is needed for each request type.
      *
      * @param string $userkey           The userkey provided from aspsms.net
      * @param string $password          The blank passwort from your aspsms.net login
