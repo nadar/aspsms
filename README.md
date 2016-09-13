@@ -7,11 +7,10 @@ A very simple to use sms sending class for the aspsms.com gateway by
 Installation
 ------------
 
-The recommended way to install is through
-[Composer](http://getcomposer.org):
+The recommended way to install is through [Composer](http://getcomposer.org):
 
-```
-$ composer require nadar/aspsms "1.0.2"
+```sh
+composer require nadar/aspsms:~1.0.0
 ```
 
 Usage
