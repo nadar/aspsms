@@ -11,7 +11,7 @@ The recommended way to install is through
 [Composer](http://getcomposer.org):
 
 ```
-$ composer require nadar/aspsms "1.0.1"
+$ composer require nadar/aspsms "1.0.2"
 ```
 
 Usage
