@@ -6,7 +6,7 @@ namespace Aspsms;
  * Exceptions
  *
  * @package Aspsms
- * @author nadar <n@adar.ch>
+ * @author Basil Suter <git@nadar.io>
  * @see https://github.com/nadar/aspsms
  */
 class Exception extends \Exception

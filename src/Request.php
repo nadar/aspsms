@@ -14,15 +14,13 @@ namespace Aspsms;
  * $request->flush();
  *
  * @package Aspsms
- * @author nadar <n@adar.ch>
+ * @author Basil Suter <git@nadar.io>
  * @see https://github.com/nadar/aspsms
  */
 class Request
 {
     /**
-     * Default options for the curl request
-     *
-     * @param array
+     * @param array Default options for the curl request
      */
     private $options = array(
         CURLOPT_TIMEOUT => 10,
@@ -32,17 +30,15 @@ class Request
     );
 
     /**
-     * All values which are provided through value() or __construct()
-     *
-     * @param array
+     * @param array All values which are provided through value() or __construct()
      */
     private $values = array();
 
     /**
      * AspsmsRequest constructor requires call service url.
      *
-     * @param string $url              The called webservice url
-     * @param array  $values[optional] Values can be set direct in the class construct or via the value() method.
+     * @param string $url The called webservice url
+     * @param array $values Values can be set direct in the class construct or via the value() method.
      */
     public function __construct($url, array $values = array())
     {
@@ -55,8 +51,8 @@ class Request
     /**
      * Optional method to set values.
      *
-     * @param  string  $key   The POST-FIELD-KEY
-     * @param  string  $value The value of the postfield
+     * @param string $key The POST-FIELD-KEY
+     * @param string $value The value of the postfield
      * @return boolean
      */
     public function value($key, $value)
@@ -83,8 +79,8 @@ class Request
     /**
      * Could not use http_build_query() because of &, ; & : signs changing, need to build a
      * simple function to build the strings.
-     * @todo url_encoding the values (verify affecting requests first)
-     * @param  array  $values Key value pared parameter values
+     *
+     * @param array $values Key value pared parameter values
      * @return string
      */
     private function buildPostfields($values)
@@ -101,7 +97,7 @@ class Request
      * Initiates the main curl execution.
      *
      * @return string/mixed
-     * @throws Exception
+     * @throws \Aspsms\Exception
      */
     public function transfer()
     {

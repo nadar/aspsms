@@ -8,44 +8,36 @@ namespace Aspsms;
  *
  * @example See in examples/basic_composer_setup.php
  * @package Aspsms
- * @author nadar <n@adar.ch>
+ * @author Basil Suter <git@nadar.io>
  * @see https://github.com/nadar/aspsms
  */
 class Aspsms
 {
     /**
-     * Contains the Aspms Class Version
+     * @var string Contains the Aspsms Class Version.
      */
-    const VERSION = '1.0.2';
+    const VERSION = '1.0.3';
 
     /**
-     * Contains the services url [status 30.01.2013]
-     *
-     * @var string
+     * @var string Contains the services url (status 30.01.2013)
      */
     public $server = "https://webservice.aspsms.com/aspsmsx2.asmx/";
 
     /**
-     * Contains the userkey which is provided from the aspsms.com webpage under the menu
+     * @var string Contains the userkey which is provided from the aspsms.com webpage under the menu
      * point "USERKEY". Looks somewhat like this FAG9XPAUQLQ3
-     *
-     * @var string
      */
     private $userkey = null;
 
     /**
-     * The password you use to login on the webpage (aspsms.com), in its blank not encrypted form...
-     *
-     * @var string
+     * @var string The password you use to login on the webpage (aspsms.com), in its blank not encrypted form...
      */
     private $password = null;
 
     /**
-     * All sms status service reason codes which appears to be used when u have a not usual
-     * deliver status. There is an optional newsletter from 2009 with some more information [see]
-     *
+     * @var array All sms status service reason codes which appears to be used when u have a not usual
+     * deliver status. There is an optional newsletter from 2009 with some more information.
      * @see http://www.aspsms.de/newsletter/html/en/200905/
-     * @var array
      */
     private $deliveryReasonCodes = array(
         "000" => "Unknown Subscriber",
@@ -92,9 +84,7 @@ class Aspsms
     );
 
     /**
-     * Contains all delivery sms notification status
-     *
-     * @var array
+     * @var array Contains all delivery sms notification status.
      */
     private $deliveryStatusCodes = array(
        -1 => "Not yet submitted or rejected",
@@ -104,9 +94,7 @@ class Aspsms
     );
 
     /**
-     * Response status codes when you send an sms
-     *
-     * @var array
+     * @var array All known valid response status codes when sending an sms over the aspnet api.
      */
     private $sendStatusCodes = array(
         1 => "Ok",
@@ -137,17 +125,13 @@ class Aspsms
     );
 
     /**
-     * Contains the sms status response value from $sendStatusCodes
-     *
-     * @var string
+     * @var string Contains the sms status response value from $sendStatusCodes
      */
     private $sendStatus = null;
 
     /**
-     * Contains all valid option parameters which can be delivered trough option
+     * @var array Contains all valid option parameters which can be delivered trough option
      * arguments in functions.
-     *
-     * @var array
      */
     private $validOptions = array(
         "Originator",
@@ -164,18 +148,16 @@ class Aspsms
     );
 
     /**
-     * All active options with their values, will be flushed after each request
-     *
-     * @var string
+     * @var array All active options with their values, will be flushed after each request
      */
     private $currentOptions = array();
 
     /**
      * The class constructor contains basic information that is needed for each request type.
      *
-     * @param string $userkey           The userkey provided from aspsms.net
-     * @param string $password          The blank passwort from your aspsms.net login
-     * @param array  $options[optional] Basic associativ array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator.
+     * @param string $userkey The userkey provided from aspsms.net
+     * @param string $password The blank passwort from your aspsms.net login
+     * @param array $options Basic associativ array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator.
      */
     public function __construct($userkey, $password, array $options = array())
     {
@@ -188,15 +170,20 @@ class Aspsms
     }
 
     /**
-     * Main function sendTextSms, used to send a SMS message to multiple recipients.
+     * Send a text message to one or more recipients.
      *
      * Usage example without options:
+     *
+     * ```php
      * sendTextSms("Hello world! I am your message", array(
      *     "0001" => "0041123456789",
      *     "0002" => "0041123456780"
      * ));
+     * ```
      *
      * Usage example with options:
+     *
+     * ```php
      * sendTextSms("Hello world! I am your message", array(
      *     "0001" => "0041123456789",
      *     "0002" => "0041123456780"
@@ -204,14 +191,13 @@ class Aspsms
      *     "Originator" => "MYCOMPANY_SENDER_NAME",
      *     "AffiliateId" => "1234567"
      * ));
+     * ```
      *
-     * @param  string    $message           Contains the message text for the user.
-     * @param  array     $recipients        Array containing the recipients, where the key is the tracking number and the value
-     *                                      equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
-     * @param  array     $options[optional] Basic associative array, available keys see $validOptions array. Commonly used to provide
-     *                                      AffiliateId or Originator values.
+     * @param string $message The message to sent to the recipients.
+     * @param array $recipients Array containing the recipients, where the key is the tracking number and the value equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
+     * @param array $options Basic associative array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator values.
      * @return boolean
-     * @throws Exception
+     * @throws \Aspsms\Exception
      */
     public function sendTextSms($message, array $recipients, array $options = array())
     {
@@ -263,15 +249,16 @@ class Aspsms
      *
      * According to the Documentation on aspsms.net a response as partial separated by semicolon (;) below the descriptions of the parts:
      * => TransactionReferenceNumber ; DeliveryStatus ; SubmissionDate ; NotificationDate ; Reasoncode
+     *
      * Below some sample responses from the "InquireDeliveryNotifications" method:
      * => success-delivery: 1359553540;0;30012013144546;30012013144555;000;;
      * => failure-delivery: 1359555046;2;30012013151053;30012013151053;206;;
-     * 
+     *
      * Please note: If you have multiple sms sent with the same tracking number only the status for the newest sms will be returned.
      *
-     * @param  mixed     $tracknr The tracking number which is provided when setting the recipients. Can be an array of tracking numbers.
-     * @return array     (If an array with multiple tracking numbers is provided the response as an assoc array for each tracking number.)
-     * @throws Exception
+     * @param mixed $tracknr The tracking number which is provided when setting the recipients. Can be an array of tracking numbers.
+     * @return array (If an array with multiple tracking numbers is provided the response as an assoc array for each tracking number.)
+     * @throws \Aspsms\Exception
      */
     public function deliveryStatus($tracknr)
     {
@@ -373,21 +360,19 @@ class Aspsms
     }
 
     /**
-     * Parse the response into an array and see if its valid.
+     * Parse the response the response stringo into an array.
      *
-     * @param  string    $response
-     * @throws Exception
+     * @param string $response
+     * @throws \Aspsms\Exception
      * @return array
      */
-    private function parseResponse($response)
+    public function parseResponse($response)
     {
-        $result = explode(":", $response);
-
-        if (count($result) == 0 || !is_array($result)) {
-            throw new Exception(sprintf("Could not parse response '%s'.", $response));
+        if (empty($response)) {
+            throw new Exception("Unable to parse an empty response string.");
         }
-
-        return $result;
+        
+        return explode(":", $response);
     }
 
     /**
@@ -403,7 +388,7 @@ class Aspsms
     /**
      * Delete all not allowed signs from a tracking number.
      *
-     * @param  string $trackingNumber The tracking number to verify
+     * @param string $trackingNumber The tracking number to verify
      * @return string
      */
     public static function verifyTrackingNumber($trackingNumber)
@@ -415,12 +400,11 @@ class Aspsms
     /**
      * Delete not allowed signs from the mobile phone number.
      *
-     * @param  string $mobileNumber The mobile number to verify
+     * @param string $mobileNumber The mobile number to verify
      * @return string
      */
     public static function verifyMobileNumber($mobileNumber)
     {
-        // only numberic values
         return preg_replace("/[^0-9]/", "", $mobileNumber);
     }
 
@@ -428,8 +412,8 @@ class Aspsms
      * Execute the CURL HTTP POST request to aspsms server. Below a description of the different actions and their values/options:
      *
      * @see https://webservice.aspsms.com/aspsmsx2.asmx
-     * @param  string       $action Contains the aspsms service defined action name like: CheckCredits, InquireDeliveryNotifications, SendTextSMS
-     * @param  array        $values The values which needs to be passed to this action
+     * @param string $action Contains the aspsms service defined action name like: CheckCredits, InquireDeliveryNotifications, SendTextSMS
+     * @param array $values The values which needs to be passed to this action
      * @return string/mixed
      */
     private function request($action, array $values = array())
@@ -449,7 +433,7 @@ class Aspsms
     /**
      * We put all options together, and also add the always the basics like userkey and password.
      *
-     * @param  array $values The key is the "post-field" and the value the "post-field-associated-value"
+     * @param array $values The key is the "post-field" and the value the "post-field-associated-value"
      * @return array
      */
     private function prepareValues($values)
@@ -485,10 +469,10 @@ class Aspsms
      * Set transfer options/values into currentOptions. Only options which are in the list $validOptions
      * are allowed to set.
      *
-     * @param  string    $key   The Option-Key/Name
-     * @param  string    $value The value for the Option-Key
+     * @param string $key The Option-Key/Name
+     * @param string $value The value for the Option-Key
      * @return boolean
-     * @throws Exception
+     * @throws \Aspsms\Exception
      */
     private function setOption($key, $value)
     {
@@ -506,9 +490,9 @@ class Aspsms
      * Set multiple transfer options into currentOptions. Only options which are in the list
      * $validOptions are allowed to set.
      *
-     * @param  array     $options An associative array containing the option-keys and option-key-values
+     * @param array $options An associative array containing the option-keys and option-key-values
      * @return boolean
-     * @throws Exception
+     * @throws \Aspsms\Exception
      */
     private function setOptions(array $options)
     {
@@ -524,7 +508,7 @@ class Aspsms
      * Gets all options/values. If there is no value set for the needed $optionKeys the function sets
      * an empty default string '' and returns all requests $optionKeys
      *
-     * @param  array $optionKeys All options which are requested
+     * @param array $optionKeys All options which are requested
      * @return array
      */
     private function getOptions(array $optionKeys)
@@ -548,12 +532,17 @@ class Aspsms
      * The delivery status return timestamp seems not to be very readable, so we have to split
      * the input string by "hand"
      *
-     * @param  string $date Input date string like: 30012013223015
+     * @param string $date Input date string like: 30012013223015
+     * @throws \Aspsms\Exception
      * @return string
      */
-    private function dateSplitter($date)
+    public function dateSplitter($date)
     {
         $datetime = \DateTime::createFromFormat('dmYHis', $date);
+        
+        if (!$datetime) {
+            throw new Exception("Unable to split invalid input date '{$date}'.");
+        }
 
         return $datetime->format('d.m.Y H:i:s');
     }

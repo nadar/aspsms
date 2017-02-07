@@ -1,14 +1,11 @@
-SMS wrapper class for ASPSMS.COM
-================
+# SMS wrapper class for ASPSMS
 
 [![Latest Stable Version](https://poser.pugx.org/nadar/aspsms/v/stable)](https://packagist.org/packages/nadar/aspsms)
 [![Total Downloads](https://poser.pugx.org/nadar/aspsms/downloads)](https://packagist.org/packages/nadar/aspsms)
 
-A very simple to use sms sending class for the aspsms.com gateway by
-[indieLab](http://www.indielab.ch).
+A very simple to use sms sending class for the [aspsms.com](http://aspsms.com) gateway by [indielab](http://www.indielab.ch).
 
-Installation
-------------
+## Installation
 
 The recommended way to install is through [Composer](http://getcomposer.org):
 
@@ -16,8 +13,7 @@ The recommended way to install is through [Composer](http://getcomposer.org):
 composer require nadar/aspsms:~1.0.0
 ```
 
-Usage
------------
+## Usage
 
 ```php
 <?php
@@ -54,33 +50,25 @@ $status3 = $aspsms->deliveryStatus('<TRACKING_NR3>');
 var_dump($status1, $status2, $status3);
 ```
 
-Contributing
-------------
+## Contributing
 
 #### Quick guide:
 
- * Fork the repo.
- * Install dependencies: `composer install`.
- * Make changes.
- * If you are adding functionality or fixing a bug - add a test!
++ Fork the repo.
++ Install dependencies: `composer install`.
++ Make changes.
++ If you are adding functionality or fixing a bug - Please add a unit test!
++ Ensure coding standards.
 
-Unit Tests
-----------
+#### Unit Tests
 
 In order to run the test suite, install the development dependencies:
 
 ```sh
-$ composer install --dev
+composer install
 ```
 
-Then, run the following command:
-
-```sh
-$ bin/phpunit
-```
-
-Rename the `phpunit.xml.dist` file to `phpunit.xml`, then uncomment the
-following lines and add your const:
+Rename the `phpunit.xml.dist` file to `phpunit.xml`, then uncomment the following lines and add your const values:
 
 ```xml
 <php>
@@ -91,4 +79,16 @@ following lines and add your const:
 </php>
 ```
 
-You're done.
+Test your code with the following command:
+
+```sh
+./vendor/bin/phpunit
+```
+
+Run the coding standard fixer before send a new pull request.
+
+```sh
+./vendor/bin/php-cs-fixer fix src/
+```
+
+You're done. Thanks!
