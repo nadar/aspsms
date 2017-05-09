@@ -1,11 +1,11 @@
-# SMS wrapper class for ASPSMS
+# SMS wrapper class for ASPSMS
 
 [![Latest Stable Version](https://poser.pugx.org/nadar/aspsms/v/stable)](https://packagist.org/packages/nadar/aspsms)
 [![Total Downloads](https://poser.pugx.org/nadar/aspsms/downloads)](https://packagist.org/packages/nadar/aspsms)
 
 A very simple to use sms sending class for the [aspsms.com](http://aspsms.com) gateway by [indielab](http://www.indielab.ch).
 
-## Installation
+## Installation
 
 The recommended way to install is through [Composer](http://getcomposer.org):
 
@@ -13,7 +13,7 @@ The recommended way to install is through [Composer](http://getcomposer.org):
 composer require nadar/aspsms:~1.0.0
 ```
 
-## Usage
+## Usage
 
 ```php
 <?php
@@ -50,7 +50,7 @@ $status3 = $aspsms->deliveryStatus('<TRACKING_NR3>');
 var_dump($status1, $status2, $status3);
 ```
 
-## Contributing
+## Contributing
 
 #### Quick guide:
 
@@ -60,7 +60,7 @@ var_dump($status1, $status2, $status3);
 + If you are adding functionality or fixing a bug - Please add a unit test!
 + Ensure coding standards.
 
-#### Unit Tests
+#### Unit Tests
 
 In order to run the test suite, install the development dependencies:
 
