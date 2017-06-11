@@ -10,7 +10,7 @@ A very simple to use sms sending class for the [aspsms.com](http://aspsms.com) g
 The recommended way to install is through [Composer](http://getcomposer.org):
 
 ```sh
-composer require nadar/aspsms:~1.0.0
+composer require nadar/aspsms
 ```
 
 ## Usage
