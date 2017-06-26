@@ -19,7 +19,7 @@ class Aspsms
     const VERSION = '1.0.3';
 
     /**
-     * @var string Contains the services url (status 30.01.2013)
+     * @var string Contains the services url (status 26.06.2017)
      */
     public $server = "https://soap.aspsms.com/aspsmsx2.asmx/";
 
