@@ -107,8 +107,12 @@ class Request
         $curl = curl_init();
         // set all options into curl object from $options
         curl_setopt_array($curl, $this->options);
-        // excute the curl and write response into $response
+        // execute the curl and write response into $response
         $response = curl_exec($curl);
+        // populate response with curl error message if curl_exec failed
+        if ($response === false) {
+            $response = curl_error($curl);
+        }
         // close the curl connection
         curl_close($curl);
         // see if response is xml valid (else we have a basic api error)
