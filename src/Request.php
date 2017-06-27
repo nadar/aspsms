@@ -7,11 +7,13 @@ namespace Aspsms;
  *
  * Usage example:
  *
+ * ```php
  * $request = new \Request('https://webservice.aspsms.com/aspsmsx2.asmx/CheckCredits');
  * // transfer the request
  * $response = $request->transfer();
  * // flush the request object
  * $request->flush();
+ * ```
  *
  * @package Aspsms
  * @author Basil Suter <git@nadar.io>
@@ -125,8 +127,8 @@ class Request
             $nodeContent = $doc->firstChild->textContent;
             // return the content
             return $nodeContent;
-        } else {
-            throw new Exception(sprintf("Invalid API Response '%s'", trim($response)));
         }
+        
+        throw new Exception(sprintf("Invalid API Response '%s'", trim($response)));
     }
 }

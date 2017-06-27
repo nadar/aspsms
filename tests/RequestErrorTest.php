@@ -4,7 +4,6 @@ namespace Aspsms\Test;
 
 class RequestErrorTest extends \PHPUnit_Framework_TestCase
 {
-
     protected $request;
     
     protected $badSSLUrl = "https://webservice.aspsms.com/aspsmsx2.asmx/";
@@ -23,5 +22,4 @@ class RequestErrorTest extends \PHPUnit_Framework_TestCase
     {
         $this->request->transfer();
     }
-
 }

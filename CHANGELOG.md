@@ -4,8 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-1.0.4 (in progress)
+1.0.4 (Jun. 2017)
 ------------------
+
+- [#10](https://github.com/nadar/aspsms/pull/10) Changed server URL to a newer server URL (found here: http://www.aspsms.ch/de/soap/). The older URL uses an outdated SSL connection which can cause errors with newer clients.
+Curl errors are now assigned to the response, so exception messages caninclude the curl error message.
 
 1.0.3 (Feb. 2017)
 --------------------
