@@ -555,7 +555,7 @@ class Aspsms
      * @param string $date Input date string like: 30012013223015
      * @throws \Aspsms\Exception
      * @return string
-     * @deprecated since version 1.0.5 use
+     * @deprecated since version 1.0.5 use getFormatedTime() instead.
      */
     public function dateSplitter($date)
     {
