@@ -28,4 +28,9 @@ class AspsmsTest extends \PHPUnit_Framework_TestCase
         $this->expectException('Aspsms\Exception');
         $this->aspsms->dateSplitter('123123123');
     }
+    
+    public function testGetTimestamp()
+    {
+        $this->assertSame(1359585015, $this->aspsms->getUnixTimestamp('30012013223015'));
+    }
 }

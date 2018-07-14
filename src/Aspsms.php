@@ -2,6 +2,8 @@
 
 namespace Aspsms;
 
+use DateTime;
+
 /**
  * The Aspsms class provides the basic function to easily send message, check delivery status or
  * show the available amount of credits.
@@ -14,9 +16,21 @@ namespace Aspsms;
 class Aspsms
 {
     /**
+     * @var string Option key for affilate id
+     * @since 1.0.5
+     */
+    const OPTION_AFFILATEID = 'AffiliateId';
+    
+    /**
+     * @var string Option key for Originator name (sender name).
+     * @since 1.0.5
+     */
+    const OPTION_ORIGINATOR = 'Originator';
+    
+    /**
      * @var string Contains the Aspsms Class Version.
      */
-    const VERSION = '1.0.5-dev';
+    const VERSION = '1.0.5';
 
     /**
      * @var string Contains the services url (status 26.06.2017)
@@ -304,8 +318,10 @@ class Aspsms
                     "transactionReferenceNumber" => $result[0],
                     "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
                     "deliveryStatusBool" => ($result[1] == 0) ? true : false,
-                    "submissionDate" => isset($result[2]) ? $this->dateSplitter($result[2]) : null,
+                    "submissionDate" => isset($result[2]) ? $this->getFormatedTime($result[2]) : null,
+                    "submissionDateTimestamp" => isset($result[2]) ? $this->getUnixTimestamp($result[2]) : null,
                     "notificationDate" => null,
+                    "notificationDateTimestamp" => null,
                     "reasoncode" => null,
                 );
             } else {
@@ -314,8 +330,10 @@ class Aspsms
                     "transactionReferenceNumber" => $result[0],
                     "deliveryStatus" => $this->deliveryStatusCodes[$result[1]],
                     "deliveryStatusBool" => ($result[1] == 0) ? true : false,
-                    "submissionDate" => $this->dateSplitter($result[2]),
-                    "notificationDate" => $this->dateSplitter($result[3]),
+                    "submissionDate" => $this->getFormatedTime($result[2]),
+                    "submissionDateTimestamp" => $this->getUnixTimestamp($result[2]),
+                    "notificationDate" => $this->getFormatedTime($result[3]),
+                    "notificationDateTimestamp" => $this->getUnixTimestamp($result[3]),
                     "reasoncode" => $reasoncode,
                 );
             }
@@ -490,11 +508,13 @@ class Aspsms
      * Set multiple transfer options into currentOptions. Only options which are in the list
      * $validOptions are allowed to set.
      *
-     * @param array $options An associative array containing the option-keys and option-key-values
+     * @param array $options An associative array containing the option-keys and option-key-values. Example options:
+     * + AffiliateId
+     * + Originator
      * @return boolean
      * @throws \Aspsms\Exception
      */
-    private function setOptions(array $options)
+    public function setOptions(array $options)
     {
         // loop the $options items
         foreach ($options as $key => $value) {
@@ -535,15 +555,59 @@ class Aspsms
      * @param string $date Input date string like: 30012013223015
      * @throws \Aspsms\Exception
      * @return string
+     * @deprecated since version 1.0.5 use
      */
     public function dateSplitter($date)
     {
-        $datetime = \DateTime::createFromFormat('dmYHis', $date);
+        return $this->getFormatedTime($date);
+    }
+    
+    /**
+     * Get the pre-formated timestamp from a date string.
+     *
+     * @param string $date Input date string like: 30012013223015
+     * @throws \Aspsms\Exception
+     * @return string
+     * @since 1.0.5
+     */
+    public function getFormatedTime($date)
+    {
+        $time = $this->createDateTimeFromString($date);
+        
+        return $time->format('d.m.Y H:i:s');
+    }
+    
+    /**
+     * Get the unix timestamp from a date string.
+     *
+     * @param string $date Input date string like: 30012013223015
+     * @throws \Aspsms\Exception
+     * @return integer
+     * @since 1.0.5
+     */
+    public function getUnixTimestamp($date)
+    {
+        $time = $this->createDateTimeFromString($date);
+        
+        return $time->getTimestamp();
+    }
+    
+    /**
+     * Create a DateTime object from the aspsms time string.
+     *
+     * @param string $date Input date string like: 30012013223015
+     * @throws Exception
+     * @return DateTime
+     * @since 1.0.5
+     */
+    public function createDateTimeFromString($date)
+    {
+        $datetime = DateTime::createFromFormat('dmYHis', $date);
         
         if (!$datetime) {
             throw new Exception("Unable to split invalid input date '{$date}'.");
         }
-
-        return $datetime->format('d.m.Y H:i:s');
+        
+        return $datetime;
     }
 }
