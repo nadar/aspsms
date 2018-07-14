@@ -30,7 +30,7 @@ class Aspsms
     /**
      * @var string Contains the Aspsms Class Version.
      */
-    const VERSION = '1.0.5';
+    const VERSION = '1.0.6';
 
     /**
      * @var string Contains the services url (status 26.06.2017)
