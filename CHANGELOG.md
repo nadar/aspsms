@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 + [#11](https://github.com/nadar/aspsms/issues/11) Delivery status returns now both formated and timestamp date time.
 + Make private method `setOptions()` public.
-+ Add option contanst `OPTION_AFFILATEID` and `OPTION_ORIGINATOR`
++ Add option constants `OPTION_AFFILATEID` and `OPTION_ORIGINATOR`
 
 1.0.4 (Jun. 2017)
 ------------------
