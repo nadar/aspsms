@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-1.0.5 (in progress)
+1.1.0 (7. June 2021)
 ------------------
+
++ [#12](https://github.com/nadar/aspsms/pull/12) New option to send unicode message with `sendUnicodeSms()` method.
 
 1.0.5 (Jul. 2018)
 ------------------
@@ -36,7 +38,7 @@ Curl errors are now assigned to the response, so exception messages can include 
 + Added new tests and changed exceptions Added new unit tests for commit 4a43a72 and f3be2d1  Streamlined thrown exceptions. Changed Delivery Status „submissionDate“ because it is sometimes already set.
 + Longer sms Fixed errors when working with sms longer than 160 chars. Fixed delivery status report with multiple tracking numbers.
 
-Thanks to @mergeMarc 
+Thanks to @mergeMarc
 
 1.0.1 (Apr. 2016)
 --------------------

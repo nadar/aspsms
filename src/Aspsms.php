@@ -34,13 +34,13 @@ class Aspsms
 
     /**
      * @var string Endpoint function to send text messages.
-     * @since 1.0.6
+     * @since 1.1.0
      */
     const ENDPOINT_TEXT = "SendTextSMS";
 
     /**
      * @var string Endpoint function to send Unicode messages.
-     * @since 1.0.6
+     * @since 1.1.0
      */
     const ENDPOINT_UNICODE = "SendUnicodeSMS";
 
@@ -201,6 +201,7 @@ class Aspsms
      * @param array $options Basic associative array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator values.
      * @return boolean
      * @throws \Aspsms\Exception
+     * @since 1.1.0
      */
     private function sendSms(string $endpoint, $message, array $recipients, array $options = array())
     {
@@ -309,6 +310,7 @@ class Aspsms
      * @param array $recipients Array containing the recipients, where the key is the tracking number and the value equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
      * @param array $options Basic associative array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator values.
      * @return boolean
+     * @since 1.1.0
      */
     public function sendUnicodeSms($message, array $recipients, array $options = array())
     {

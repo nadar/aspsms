@@ -28,7 +28,7 @@ class AspsmsSuccessTest extends \PHPUnit_Framework_TestCase
     public function testSendLongTextSms()
     {
         // text length: 212
-         $sendSms = $this->aspsms->sendTextSms("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.", array(
+        $sendSms = $this->aspsms->sendTextSms("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.", array(
             SMS_TRACKING => SMS_NUMBER,
         ));
 
