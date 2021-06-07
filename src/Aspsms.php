@@ -20,17 +20,29 @@ class Aspsms
      * @since 1.0.5
      */
     const OPTION_AFFILATEID = 'AffiliateId';
-    
+
     /**
      * @var string Option key for Originator name (sender name).
      * @since 1.0.5
      */
     const OPTION_ORIGINATOR = 'Originator';
-    
+
     /**
      * @var string Contains the Aspsms Class Version.
      */
     const VERSION = '1.0.6';
+
+    /**
+     * @var string Endpoint function to send text messages.
+     * @since 1.0.6
+     */
+    const ENDPOINT_TEXT = "SendTextSMS";
+
+    /**
+     * @var string Endpoint function to send Unicode messages.
+     * @since 1.0.6
+     */
+    const ENDPOINT_UNICODE = "SendUnicodeSMS";
 
     /**
      * @var string Contains the services url (status 26.06.2017)
@@ -101,7 +113,7 @@ class Aspsms
      * @var array Contains all delivery sms notification status.
      */
     private $deliveryStatusCodes = array(
-       -1 => "Not yet submitted or rejected",
+        -1 => "Not yet submitted or rejected",
         0 => "Delivered",
         1 => "Buffered",
         2 => "Not Delivered",
@@ -184,6 +196,58 @@ class Aspsms
     }
 
     /**
+     * @param string $message The message to sent to the recipients.
+     * @param array $recipients Array containing the recipients, where the key is the tracking number and the value equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
+     * @param array $options Basic associative array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator values.
+     * @return boolean
+     * @throws \Aspsms\Exception
+     */
+    private function sendSms(string $endpoint, $message, array $recipients, array $options = array())
+    {
+        // set message option
+        $this->setOption("MessageText", $message);
+        // set recipients option
+        $recipientList = array();
+        // collect all recipients with teir
+        foreach ($recipients as $tracknr => $number) {
+            // according to the docs multiple recipients must look like this: <NUMBER>:<TRACKNR>;<NUMBER>:<TRACKNR>
+            $recipientList[] = "$number:$tracknr";
+        }
+        // se the recipients into the options list
+        $this->setOption("Recipients", implode(";", $recipientList));
+        // optional options parameter to set values into currentOptions
+        $this->setOptions($options);
+        // start request width defined options for this action
+        $response = $this->request($endpoint, $this->getOptions(array(
+            "Recipients",
+            "AffiliateId",
+            "MessageText",
+            "Originator",
+            "DeferredDeliveryTime",
+            "FlashingSMS",
+            "TimeZone",
+            "URLBufferedMessageNotification",
+            "URLDeliveryNotification",
+            "URLNonDeliveryNotification",
+        )));
+
+        $result = $this->parseResponse($response);
+
+        // verify if the status code exists in sendStatusCodes
+        if (!array_key_exists($result[1], $this->sendStatusCodes)) {
+            throw new Exception("Error while printing the response code into sendStatus. ResponseCode seems not valid. Response: \"{$response}\"");
+        }
+        // send the status as text value into $sendStatus
+        $this->sendStatus = $this->sendStatusCodes[$result[1]];
+        // if the result is not equal 1 something is wrong
+        if ($result[1] !== "1") {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Send a text message to one or more recipients.
      *
      * Usage example without options:
@@ -211,54 +275,13 @@ class Aspsms
      * @param array $recipients Array containing the recipients, where the key is the tracking number and the value equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
      * @param array $options Basic associative array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator values.
      * @return boolean
-     * @throws \Aspsms\Exception
      */
     public function sendTextSms($message, array $recipients, array $options = array())
     {
-        // set message option
-        $this->setOption("MessageText", $message);
-        // set recipients option
-        $recipientList = array();
-        // collect all recipients with teir
-        foreach ($recipients as $tracknr => $number) {
-            // according to the docs multiple recipients must look like this: <NUMBER>:<TRACKNR>;<NUMBER>:<TRACKNR>
-            $recipientList[] = "$number:$tracknr";
-        }
-        // se the recipients into the options list
-        $this->setOption("Recipients", implode(";", $recipientList));
-        // optional options parameter to set values into currentOptions
-        $this->setOptions($options);
-        // start request width defined options for this action
-        $response = $this->request("SendTextSMS", $this->getOptions(array(
-            "Recipients",
-            "AffiliateId",
-            "MessageText",
-            "Originator",
-            "DeferredDeliveryTime",
-            "FlashingSMS",
-            "TimeZone",
-            "URLBufferedMessageNotification",
-            "URLDeliveryNotification",
-            "URLNonDeliveryNotification",
-        )));
-
-        $result = $this->parseResponse($response);
-
-        // verify if the status code exists in sendStatusCodes
-        if (!array_key_exists($result[1], $this->sendStatusCodes)) {
-            throw new Exception("Error while printing the response code into sendStatus. ResponseCode seems not valid. Response: \"{$response}\"");
-        }
-        // send the status as text value into $sendStatus
-        $this->sendStatus = $this->sendStatusCodes[$result[1]];
-        // if the result is not equal 1 something is wrong
-        if ($result[1] !== "1") {
-            return false;
-        }
-
-        return true;
+        return $this->sendSms(self::ENDPOINT_TEXT, $message, $recipients, $options);
     }
 
-        /**
+    /**
      * Send a Unicode message to one or more recipients.
      *
      * Usage example without options:
@@ -286,53 +309,12 @@ class Aspsms
      * @param array $recipients Array containing the recipients, where the key is the tracking number and the value equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
      * @param array $options Basic associative array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator values.
      * @return boolean
-     * @throws \Aspsms\Exception
      */
     public function sendUnicodeSms($message, array $recipients, array $options = array())
     {
-        // set message option
-        $this->setOption("MessageText", $message);
-        // set recipients option
-        $recipientList = array();
-        // collect all recipients with teir
-        foreach ($recipients as $tracknr => $number) {
-            // according to the docs multiple recipients must look like this: <NUMBER>:<TRACKNR>;<NUMBER>:<TRACKNR>
-            $recipientList[] = "$number:$tracknr";
-        }
-        // se the recipients into the options list
-        $this->setOption("Recipients", implode(";", $recipientList));
-        // optional options parameter to set values into currentOptions
-        $this->setOptions($options);
-        // start request width defined options for this action
-        $response = $this->request("SendUnicodeSMS", $this->getOptions(array(
-            "Recipients",
-            "AffiliateId",
-            "MessageText",
-            "Originator",
-            "DeferredDeliveryTime",
-            "FlashingSMS",
-            "TimeZone",
-            "URLBufferedMessageNotification",
-            "URLDeliveryNotification",
-            "URLNonDeliveryNotification",
-        )));
-
-        $result = $this->parseResponse($response);
-
-        // verify if the status code exists in sendStatusCodes
-        if (!array_key_exists($result[1], $this->sendStatusCodes)) {
-            throw new Exception("Error while printing the response code into sendStatus. ResponseCode seems not valid. Response: \"{$response}\"");
-        }
-        // send the status as text value into $sendStatus
-        $this->sendStatus = $this->sendStatusCodes[$result[1]];
-        // if the result is not equal 1 something is wrong
-        if ($result[1] !== "1") {
-            return false;
-        }
-
-        return true;
+        return $this->sendSms(self::ENDPOINT_UNICODE, $message, $recipients, $options);
     }
-    
+
     /**
      * Getting all information from the sms delivery system for the provided tracking number (which you put besides the recipients)
      *
@@ -464,7 +446,7 @@ class Aspsms
         if (empty($response)) {
             throw new Exception("Unable to parse an empty response string.");
         }
-        
+
         return explode(":", $response);
     }
 
@@ -636,7 +618,7 @@ class Aspsms
     {
         return $this->getFormatedTime($date);
     }
-    
+
     /**
      * Get the pre-formated timestamp from a date string.
      *
@@ -648,10 +630,10 @@ class Aspsms
     public function getFormatedTime($date)
     {
         $time = $this->createDateTimeFromString($date);
-        
+
         return $time->format('d.m.Y H:i:s');
     }
-    
+
     /**
      * Get the unix timestamp from a date string.
      *
@@ -663,10 +645,10 @@ class Aspsms
     public function getUnixTimestamp($date)
     {
         $time = $this->createDateTimeFromString($date);
-        
+
         return $time->getTimestamp();
     }
-    
+
     /**
      * Create a DateTime object from the aspsms time string.
      *
@@ -678,11 +660,11 @@ class Aspsms
     public function createDateTimeFromString($date)
     {
         $datetime = DateTime::createFromFormat('dmYHis', $date);
-        
+
         if (!$datetime) {
             throw new Exception("Unable to split invalid input date '{$date}'.");
         }
-        
+
         return $datetime;
     }
 }
