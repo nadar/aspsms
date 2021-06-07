@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 1.1.0 (7. June 2021)
 ------------------
 
-+ [#12](https://github.com/nadar/aspsms/pull/12) New option to send unicode message with `sendUnicodeSms()` method.
++ [#12](https://github.com/nadar/aspsms/pull/12) New option to send unicode message with `sendUnicodeSms()` method. ([@sgry](https://github.com/sgry))
 
 1.0.5 (Jul. 2018)
 ------------------
