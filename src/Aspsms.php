@@ -258,6 +258,81 @@ class Aspsms
         return true;
     }
 
+        /**
+     * Send a Unicode message to one or more recipients.
+     *
+     * Usage example without options:
+     *
+     * ```php
+     * sendTextSms("Hello world! I am your message", array(
+     *     "0001" => "0041123456789",
+     *     "0002" => "0041123456780"
+     * ));
+     * ```
+     *
+     * Usage example with options:
+     *
+     * ```php
+     * sendTextSms("Hello world! I am your message", array(
+     *     "0001" => "0041123456789",
+     *     "0002" => "0041123456780"
+     * ), array(
+     *     "Originator" => "MYCOMPANY_SENDER_NAME",
+     *     "AffiliateId" => "1234567"
+     * ));
+     * ```
+     *
+     * @param string $message The message to sent to the recipients.
+     * @param array $recipients Array containing the recipients, where the key is the tracking number and the value equals the mobile number. Mobile Number format must be without spaces or +(plus) signs.
+     * @param array $options Basic associative array, available keys see $validOptions array. Commonly used to provide AffiliateId or Originator values.
+     * @return boolean
+     * @throws \Aspsms\Exception
+     */
+    public function sendUnicodeSms($message, array $recipients, array $options = array())
+    {
+        // set message option
+        $this->setOption("MessageText", $message);
+        // set recipients option
+        $recipientList = array();
+        // collect all recipients with teir
+        foreach ($recipients as $tracknr => $number) {
+            // according to the docs multiple recipients must look like this: <NUMBER>:<TRACKNR>;<NUMBER>:<TRACKNR>
+            $recipientList[] = "$number:$tracknr";
+        }
+        // se the recipients into the options list
+        $this->setOption("Recipients", implode(";", $recipientList));
+        // optional options parameter to set values into currentOptions
+        $this->setOptions($options);
+        // start request width defined options for this action
+        $response = $this->request("SendUnicodeSMS", $this->getOptions(array(
+            "Recipients",
+            "AffiliateId",
+            "MessageText",
+            "Originator",
+            "DeferredDeliveryTime",
+            "FlashingSMS",
+            "TimeZone",
+            "URLBufferedMessageNotification",
+            "URLDeliveryNotification",
+            "URLNonDeliveryNotification",
+        )));
+
+        $result = $this->parseResponse($response);
+
+        // verify if the status code exists in sendStatusCodes
+        if (!array_key_exists($result[1], $this->sendStatusCodes)) {
+            throw new Exception("Error while printing the response code into sendStatus. ResponseCode seems not valid. Response: \"{$response}\"");
+        }
+        // send the status as text value into $sendStatus
+        $this->sendStatus = $this->sendStatusCodes[$result[1]];
+        // if the result is not equal 1 something is wrong
+        if ($result[1] !== "1") {
+            return false;
+        }
+
+        return true;
+    }
+    
     /**
      * Getting all information from the sms delivery system for the provided tracking number (which you put besides the recipients)
      *
