@@ -3,7 +3,7 @@
 [![Latest Stable Version](https://poser.pugx.org/nadar/aspsms/v/stable)](https://packagist.org/packages/nadar/aspsms)
 [![Total Downloads](https://poser.pugx.org/nadar/aspsms/downloads)](https://packagist.org/packages/nadar/aspsms)
 
-A very simple to use sms sending class for the [aspsms.com](http://aspsms.com) gateway by [indielab](http://www.indielab.ch).
+A very simple to use sms sending class for the [aspsms.com](http://aspsms.com) gateway.
 
 ## Installation
 
